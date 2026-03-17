@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>zitai | 个人主页</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <div class="bg-pattern" aria-hidden="true"></div>
+
+  <main class="page">
+    <section class="card intro-card">
+      <div class="avatar" aria-label="zitai 的头像">ZT</div>
+      <div class="intro-text">
+        <h1>zitai</h1>
+        <p class="tagline">一个正在学习用 AI 做产品的内容策划</p>
+      </div>
+    </section>
+
+    <section class="card info-card">
+      <h2>关于我</h2>
+      <ul class="info-list">
+        <li><span>当前在做</span><strong>整理自己的作品和写作方向</strong></li>
+        <li><span>身份</span><strong>内容策划</strong></li>
+        <li><span>兴趣</span><strong>AI 应用、写作、旅行</strong></li>
+        <li><span>特点</span><strong>喜欢把复杂问题讲成人话</strong></li>
+      </ul>
+    </section>
+
+    <section class="card chat-card" aria-labelledby="chat-title">
+      <div class="chat-header">
+        <h2 id="chat-title">数字分身聊天区</h2>
+        <p>欢迎随便问我，常见问题比如：最近在做什么、有哪些作品、怎么联系。</p>
+        <p id="chatMode" class="mode-tip">当前模式：硅基流动未连接（请填写 API Key）</p>
+        <p id="usageTip" class="usage-tip">发送额度：剩余 10 / 10</p>
+      </div>
+
+      <details class="llm-config" id="llmConfigPanel">
+        <summary>配置真实大模型（可选）</summary>
+        <div class="llm-config-grid">
+          <label>
+            API Base URL
+            <input id="llmBaseUrl" type="text" value="https://api.siliconflow.cn/v1" />
+          </label>
+          <label>
+            Model
+            <select id="llmModel">
+              <option value="deepseek-ai/DeepSeek-V3">DeepSeek V3</option>
+              <option value="deepseek-ai/DeepSeek-R1">DeepSeek R1</option>
+              <option value="Qwen/Qwen2.5-7B-Instruct">Qwen 2.5 7B Instruct</option>
+              <option value="Qwen/Qwen2.5-14B-Instruct">Qwen 2.5 14B Instruct</option>
+              <option value="Qwen/Qwen2.5-32B-Instruct">Qwen 2.5 32B Instruct</option>
+            </select>
+          </label>
+          <label>
+            API Key
+            <input id="llmApiKey" type="password" placeholder="sk-..." />
+          </label>
+        </div>
+        <div class="llm-config-actions">
+          <button id="saveLlmConfig" type="button">保存配置</button>
+          <button id="clearLlmConfig" type="button" class="ghost">清除配置</button>
+        </div>
+        <p class="config-note">默认使用硅基流动。请选择模型并填写 API Key 后保存即可。</p>
+      </details>
+
+      <div class="chat-layout">
+        <aside class="conversation-bar">
+          <ul id="conversationList" class="conversation-list" role="listbox" aria-label="历史对话"></ul>
+          <div class="conversation-actions">
+            <button id="newConversation" type="button" class="ghost">新建对话</button>
+            <button id="deleteConversation" type="button" class="ghost danger">删除对话</button>
+          </div>
+        </aside>
+
+        <div class="chat-main">
+          <div id="chatWindow" class="chat-window" role="log" aria-live="polite"></div>
+
+          <form id="chatForm" class="chat-form">
+            <input id="chatInput" type="text" placeholder="输入你的问题..." autocomplete="off" required />
+            <button type="submit">发送</button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
