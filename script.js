@@ -40,6 +40,10 @@ let usedCount = loadUsageCount();
 
 function updateUsageTip() {
   const remain = Math.max(0, maxUserMessages - usedCount);
+  if (!isRealLlmEnabled(getDraftConfigFromInputs())) {
+    usageTip.textContent = "发送额度：未接入模型时不限次数";
+    return;
+  }
   usageTip.textContent = `发送额度：剩余 ${remain} / ${maxUserMessages}`;
 }
 
@@ -317,14 +321,17 @@ renderActiveConversation();
 
 llmModelSelect.addEventListener("change", () => {
   setModeTip(getDraftConfigFromInputs());
+  updateUsageTip();
 });
 
 llmBaseUrlInput.addEventListener("input", () => {
   setModeTip(getDraftConfigFromInputs());
+  updateUsageTip();
 });
 
 llmApiKeyInput.addEventListener("input", () => {
   setModeTip(getDraftConfigFromInputs());
+  updateUsageTip();
 });
 
 conversationList.addEventListener("click", (event) => {
@@ -414,20 +421,26 @@ chatForm.addEventListener("submit", (event) => {
   const question = chatInput.value.trim();
   if (!question) return;
 
-  if (usedCount >= maxUserMessages) {
-    appendMessage("已达到体验上限（10 条）。如需继续使用，请联系 zitai 开通更多额度。", "bot");
+  const modelEnabled = isRealLlmEnabled(llmConfig);
+
+  if (modelEnabled && usedCount >= maxUserMessages) {
+    appendMessage("已达到模型体验上限（10 条）。如需继续使用，请联系 zitai 开通更多额度。", "bot");
     chatInput.value = "";
     return;
   }
 
   appendMessage(question, "user");
   maybeRenameActiveConversation(question);
-  usedCount += 1;
-  saveUsageCount(usedCount);
-  updateUsageTip();
+
+  if (modelEnabled) {
+    usedCount += 1;
+    saveUsageCount(usedCount);
+    updateUsageTip();
+  }
+
   chatInput.value = "";
 
-  if (!isRealLlmEnabled(llmConfig)) {
+  if (!modelEnabled) {
     setTimeout(() => {
       appendMessage(getReply(question), "bot");
     }, 300);
